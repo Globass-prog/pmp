@@ -1,0 +1,2 @@
+web: gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker
+python-3.12.0

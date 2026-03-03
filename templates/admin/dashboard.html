@@ -1,0 +1,210 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    background: #0b0f19 !important;
+    color: #e5e7eb !important;
+    font-family: Inter, system-ui, sans-serif;
+}
+
+/* Layout */
+.dashboard-wrapper {
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* Title */
+.dashboard-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:40px;
+}
+
+.dashboard-title {
+    font-size:28px;
+    font-weight:600;
+    letter-spacing:-0.5px;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+    margin-bottom:40px;
+}
+
+.stat-card {
+    background:#111827;
+    border:1px solid #1f2937;
+    padding:25px;
+    border-radius:16px;
+    transition:all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color:#6366f1;
+    transform:translateY(-4px);
+}
+
+.stat-label {
+    font-size:13px;
+    opacity:0.6;
+}
+
+.stat-value {
+    font-size:32px;
+    font-weight:600;
+    margin-top:10px;
+}
+
+/* Chart Cards */
+.chart-grid {
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+}
+
+.chart-card {
+    background:#111827;
+    border:1px solid #1f2937;
+    padding:30px;
+    border-radius:18px;
+}
+
+/* Responsive */
+@media(max-width:900px){
+    .chart-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-wrapper">
+
+    <div class="dashboard-header">
+        <div class="dashboard-title">Project Performance Overview</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total Projects</div>
+            <div class="stat-value" id="projects">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Total Tasks</div>
+            <div class="stat-value" id="tasks">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="done">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value" id="progress">0</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="chart-grid">
+
+        <!-- Performance Curve -->
+        <div class="chart-card">
+            <canvas id="performanceChart"></canvas>
+        </div>
+
+        <!-- Task Distribution -->
+        <div class="chart-card">
+            <canvas id="taskChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+let donutChart;
+let lineChart;
+
+function loadStats(){
+    fetch("/admin/dashboard/stats/")
+    .then(res=>res.json())
+    .then(data=>{
+
+        document.getElementById("projects").innerText=data.projects;
+        document.getElementById("tasks").innerText=data.tasks;
+        document.getElementById("done").innerText=data.done;
+        document.getElementById("progress").innerText=data.in_progress;
+
+        if(donutChart) donutChart.destroy();
+        if(lineChart) lineChart.destroy();
+
+        // Doughnut
+        donutChart=new Chart(document.getElementById("taskChart"),{
+            type:'doughnut',
+            data:{
+                labels:['Done','Todo','In Progress'],
+                datasets:[{
+                    data:[data.done,data.todo,data.in_progress],
+                    backgroundColor:['#22c55e','#ef4444','#f59e0b'],
+                    borderWidth:0
+                }]
+            },
+            options:{
+                plugins:{
+                    legend:{labels:{color:"#e5e7eb"}}
+                }
+            }
+        });
+
+        // 📈 Performance Curve
+        lineChart=new Chart(document.getElementById("performanceChart"),{
+            type:'line',
+            data:{
+                labels:data.performance_labels,
+                datasets:[{
+                    label:"Completed Tasks",
+                    data:data.performance_data,
+                    borderColor:"#6366f1",
+                    backgroundColor:"rgba(99,102,241,0.1)",
+                    tension:0.4,
+                    fill:true
+                }]
+            },
+            options:{
+                responsive:true,
+                plugins:{
+                    legend:{labels:{color:"#e5e7eb"}}
+                },
+                scales:{
+                    x:{ticks:{color:"#9ca3af"}},
+                    y:{ticks:{color:"#9ca3af"}}
+                }
+            }
+        });
+
+    });
+}
+
+loadStats();
+setInterval(loadStats,5000);
+</script>
+
+{% endblock %}

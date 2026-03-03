@@ -1,0 +1,45 @@
+/* ===== GLOBAL SAAS STYLE ===== */
+:root {
+    --saas-bg: #0b0f19;
+    --saas-card: #111827;
+    --saas-border: #1f2937;
+    --saas-accent: #6366f1;
+}
+
+body {
+    background-color: var(--saas-bg) !important;
+}
+
+body.light-mode {
+    --saas-bg: #f8fafc;
+    --saas-card: #ffffff;
+    --saas-border: #e5e7eb;
+}
+/* KPI Cards */
+.kpi-card {
+    background: var(--saas-card);
+    border: 1px solid var(--saas-border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--saas-accent);
+}
+
+.kpi-value {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Sidebar KPI */
+.sidebar-kpi {
+    padding: 15px;
+    background: #111827;
+    margin: 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 13px;
+}

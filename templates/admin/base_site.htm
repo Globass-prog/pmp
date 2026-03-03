@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ block.super }}
+
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #111827;
+            --border: #1f2937;
+            --accent: #6366f1;
+            --text: #e5e7eb;
+        }
+
+        body {
+            background: var(--bg) !important;
+            color: var(--text) !important;
+            font-family: Inter, system-ui, sans-serif;
+        }
+
+        #header {
+            background: var(--card) !important;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #branding h1 {
+            font-weight: 600;
+            color: white;
+        }
+
+        .module, .dashboard #content {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .button, input[type=submit] {
+            background: var(--accent) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        table {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #1f2937 !important;
+            color: #9ca3af !important;
+        }
+
+        tr:nth-child(even) {
+            background: #0f172a;
+        }
+
+        a {
+            color: var(--accent) !important;
+        }
+
+        {% extends "admin/base_site.html" %}
+
+        {% block sidebar %}
+        {{ block.super }}
+
+        <div class="sidebar-kpi">
+            🚀 Active Projects <br>
+            <strong id="sidebar-projects">0</strong>
+        </div>
+
+        <script>
+        fetch("/admin/dashboard/stats/")
+        .then(res=>res.json())
+        .then(data=>{
+            document.getElementById("sidebar-projects").innerText=data.projects;
+        });
+        </script>
+
+        {% endblock %}
+
+        /* Sidebar style */
+        #nav-sidebar {
+            background: var(--card);
+            border-right: 1px solid var(--border);
+        }
+
+        #nav-sidebar a {
+            color: var(--text);
+        }
+
+        #nav-sidebar a:hover {
+            background: #1f2937;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+
+<body class="{% block bodyclass %}{% endblock %}">
+    {% block content %}{% endblock %}
+</body>
+</html>
