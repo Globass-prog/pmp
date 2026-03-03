@@ -1,11 +1,17 @@
 from .base import *
-
-DEBUG = False
-ALLOWED_HOSTS = ['yourdomain.com']
 import os
+import dj_database_url
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']  # temporaire pour test
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+ALLOWED_HOSTS = ["*"]
+
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
+}
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

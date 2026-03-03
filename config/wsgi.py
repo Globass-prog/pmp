@@ -1,17 +1,6 @@
 import os
-import django
-from channels.routing import ProtocolTypeRouter, URLRouter
-from django.core.asgi import get_asgi_application
+from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.prod")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
-django.setup()  # 🔥 IMPORTANT
-
-import dashboard.routing
-
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": URLRouter(
-        dashboard.routing.websocket_urlpatterns
-    ),
-})
+application = get_wsgi_application()

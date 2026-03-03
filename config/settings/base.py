@@ -10,7 +10,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'daphne',
     'kanban',
     'jazzmin',
 
@@ -21,9 +20,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # 🔥 AJOUTE CECI
-    'channels',
 
     # Third party
     'rest_framework',
@@ -37,7 +33,6 @@ INSTALLED_APPS = [
     'apps.comments',
 ]
 
-ASGI_APPLICATION = "config.asgi.application"  # adapte selon ton projet
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
