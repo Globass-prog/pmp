@@ -14,7 +14,8 @@ from kanban.admin_dashboard import admin_dashboard_view, dashboard_stats_api
 
 # Page d'accueil simple
 
-
+def home(request):
+    return HttpResponse("Project Manager API is running 🚀")
 
 urlpatterns = [
     # 🔥 Dashboard custom AVANT admin
