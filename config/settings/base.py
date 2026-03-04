@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-change-this-key'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['.railway.app']
+ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'kanban',
